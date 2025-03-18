@@ -155,7 +155,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 def main() -> None:
     """Запуск бота."""
     # Создаем приложение и передаем ему токен бота
-    application = Application.builder().token(os.environ.get("TELEGRAM_BOT_TOKEN")).build()
+   application = Application.builder().token(os.environ.get("TELEGRAM_BOT_TOKEN")).build()
 
     # Создаем обработчик разговора
     conv_handler = ConversationHandler(
