@@ -188,3 +188,39 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+async def ticket_upload(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:  
+    """Обработка загрузки файла с талоном."""  
+    user = update.message.from_user  
+    user_id = user.id  
+
+    # Проверяем, что пользователь отправил файл  
+    if update.message.document:  
+        file = update.message.document  
+        file_id = file.file_id  
+        file_name = file.file_name  
+
+        try:  
+            # Сохраняем информацию о файле  
+            user_data[user_id]['ticket_file_id'] = file_id  
+            user_data[user_id]['ticket_file_name'] = file_name  
+
+            await update.message.reply_text(  
+                f"Файл '{file_name}' успешно получен.\n\n"  
+                "Теперь опишите составляющее рапорта: куда направляется, цель, дополнительные детали и т.д."  
+            )  
+
+            return REPORT_TEXT  
+        except Exception as e:  
+            logger.error(f"Ошибка при обработке файла: {e}")  
+            await update.message.reply_text(  
+                "Произошла ошибка при обработке файла. Пожалуйста, попробуйте еще раз."  
+            )  
+            return TICKET_UPLOAD  
+    else:  
+        await update.message.reply_text(  
+            "Пожалуйста, отправьте файл с талоном. Если у вас нет файла, "  
+            "сначала подготовьте его, а затем вернитесь к созданию заявки."  
+        )  
+
+        return TICKET_UPLOAD  
